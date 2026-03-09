@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Messages - ClipGo</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+display:flex;
+height:100vh;
+}
+
+.sidebar{
+width:30%;
+background:#111;
+border-right:1px solid #333;
+overflow-y:auto;
+}
+
+.chat-user{
+padding:15px;
+border-bottom:1px solid #222;
+cursor:pointer;
+}
+
+.chat-user:hover{
+background:#1b1b1b;
+}
+
+.chat-area{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.chat-header{
+padding:15px;
+background:#111;
+border-bottom:1px solid #333;
+}
+
+.messages{
+flex:1;
+padding:15px;
+overflow-y:auto;
+}
+
+.msg{
+margin-bottom:10px;
+}
+
+.sent{
+text-align:right;
+}
+
+.sent span{
+background:#4da3ff;
+padding:8px 12px;
+border-radius:10px;
+}
+
+.received span{
+background:#333;
+padding:8px 12px;
+border-radius:10px;
+}
+
+.input-box{
+display:flex;
+padding:10px;
+background:#111;
+}
+
+.input-box input{
+flex:1;
+padding:10px;
+border:none;
+background:#222;
+color:white;
+border-radius:5px;
+}
+
+.input-box button{
+margin-left:10px;
+padding:10px 15px;
+background:#4da3ff;
+border:none;
+border-radius:5px;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="chat-user" onclick="openChat('@creator1')">@creator1</div>
+
+<div class="chat-user" onclick="openChat('@creator2')">@creator2</div>
+
+<div class="chat-user" onclick="openChat('@creator3')">@creator3</div>
+
+</div>
+
+<div class="chat-area">
+
+<div class="chat-header" id="chatHeader">
+Select a chat
+</div>
+
+<div class="messages" id="messages">
+
+</div>
+
+<div class="input-box">
+
+<input type="text" id="msgInput" placeholder="Type a message">
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+</div>
+
+<script>
+
+let currentUser=""
+
+function openChat(user){
+
+currentUser=user
+
+document.getElementById("chatHeader").innerText=user
+
+document.getElementById("messages").innerHTML=""
+
+}
+
+function sendMessage(){
+
+let input=document.getElementById("msgInput")
+
+let text=input.value
+
+if(text==="") return
+
+let box=document.getElementById("messages")
+
+let msg=document.createElement("div")
+
+msg.className="msg sent"
+
+msg.innerHTML="<span>"+text+"</span>"
+
+box.appendChild(msg)
+
+input.value=""
+
+box.scrollTop=box.scrollHeight
+
+}
+
+</script>
+
+</body>
+</html>
