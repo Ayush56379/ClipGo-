@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Upload Video - ClipGo</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+.container{
+background:#1b1b1b;
+padding:40px;
+border-radius:10px;
+width:350px;
+text-align:center;
+}
+
+.logo{
+font-size:28px;
+color:#4da3ff;
+margin-bottom:20px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+margin:10px 0;
+padding:10px;
+background:#2a2a2a;
+border:none;
+border-radius:6px;
+color:white;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#4da3ff;
+border:none;
+border-radius:6px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2d8cff;
+}
+
+.progress{
+margin-top:10px;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">ClipGo</div>
+
+<h3>Upload Video</h3>
+
+<input type="file" id="videoFile" accept="video/*">
+
+<input type="text" id="caption" placeholder="Write caption">
+
+<button onclick="uploadVideo()">Upload</button>
+
+<div class="progress" id="status"></div>
+
+</div>
+
+<script>
+
+const API_URL="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
+
+function uploadVideo(){
+
+let file=document.getElementById("videoFile").files[0]
+
+if(!file){
+alert("Select a video")
+return
+}
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+let base64=reader.result.split(",")[1]
+
+document.getElementById("status").innerText="Uploading..."
+
+fetch(API_URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+name:file.name,
+file:base64
+})
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(data.success){
+
+document.getElementById("status").innerText="Upload Successful"
+
+}else{
+
+document.getElementById("status").innerText="Upload Failed"
+
+}
+
+})
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+</script>
+
+</body>
+</html>
