@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ClipGo Signup</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+
+.container{
+background:#1b1b1b;
+padding:40px;
+border-radius:10px;
+width:320px;
+box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+.logo{
+text-align:center;
+font-size:28px;
+margin-bottom:20px;
+color:#4da3ff;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:6px;
+background:#2a2a2a;
+color:white;
+font-size:14px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+background:#4da3ff;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2d8cff;
+}
+
+.login{
+text-align:center;
+margin-top:15px;
+}
+
+.login a{
+color:#4da3ff;
+text-decoration:none;
+}
+
+.message{
+text-align:center;
+margin-top:10px;
+color:#ff6b6b;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">ClipGo</div>
+
+<form id="signupForm">
+
+<input type="text" id="username" placeholder="Username" required>
+
+<input type="email" id="email" placeholder="Email" required>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<button type="submit">Create Account</button>
+
+</form>
+
+<div class="login">
+
+Already have an account?
+<a href="login.html">Login</a>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</div>
+
+<script>
+
+const API_URL="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
+
+document.getElementById("signupForm").addEventListener("submit",async function(e){
+
+e.preventDefault()
+
+let username=document.getElementById("username").value
+let email=document.getElementById("email").value
+let password=document.getElementById("password").value
+
+let response=await fetch(API_URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+action:"signup",
+username:username,
+email:email,
+password:password
+})
+})
+
+let data=await response.json()
+
+if(data.success){
+
+alert("Account Created Successfully")
+
+window.location.href="login.html"
+
+}else{
+
+document.getElementById("message").innerText="Signup Failed"
+
+}
+
+})
+
+</script>
+
+</body>
+</html>
