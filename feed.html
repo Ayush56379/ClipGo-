@@ -17,24 +17,16 @@ color:white;
 overflow:hidden;
 }
 
-/* TOP BAR */
-
-.topbar{
+.header{
 position:fixed;
 top:0;
 width:100%;
-display:flex;
-justify-content:space-between;
-padding:10px 20px;
-z-index:100;
-}
-
-.logo{
+padding:15px;
 font-size:22px;
 font-weight:bold;
+background:rgba(0,0,0,0.7);
+z-index:10;
 }
-
-/* FEED */
 
 .feed{
 height:100vh;
@@ -44,8 +36,8 @@ scroll-snap-type:y mandatory;
 
 .video-card{
 height:100vh;
-position:relative;
 scroll-snap-align:start;
+position:relative;
 }
 
 video{
@@ -54,36 +46,26 @@ height:100%;
 object-fit:cover;
 }
 
-/* ACTION BUTTONS */
-
 .actions{
 position:absolute;
 right:15px;
 bottom:120px;
 display:flex;
 flex-direction:column;
-gap:18px;
+gap:15px;
 }
 
 .actions button{
 background:none;
 border:none;
 color:white;
-font-size:24px;
-cursor:pointer;
+font-size:25px;
 }
-
-/* USER INFO */
 
 .user{
 position:absolute;
-left:15px;
 bottom:60px;
-}
-
-.caption{
-font-size:14px;
-color:#ddd;
+left:15px;
 }
 
 </style>
@@ -92,11 +74,7 @@ color:#ddd;
 
 <body>
 
-<div class="topbar">
-
-<div class="logo">ClipGo</div>
-
-</div>
+<div class="header">ClipGo</div>
 
 <div class="feed" id="feed"></div>
 
@@ -104,9 +82,9 @@ color:#ddd;
 
 const API="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
 
-/* LOAD VIDEOS */
-
 async function loadVideos(){
+
+try{
 
 let res=await fetch(API+"?action=getVideos")
 
@@ -114,14 +92,23 @@ let data=await res.json()
 
 let feed=document.getElementById("feed")
 
+if(!data.videos || data.videos.length===0){
+
+feed.innerHTML="<h2 style='text-align:center;margin-top:100px;'>No videos yet</h2>"
+
+return
+
+}
+
 data.videos.forEach(v=>{
 
 let card=document.createElement("div")
+
 card.className="video-card"
 
 card.innerHTML=`
 
-<video src="${v.url}" autoplay muted loop></video>
+<video src="${v.url}" autoplay muted loop playsinline></video>
 
 <div class="actions">
 
@@ -129,15 +116,12 @@ card.innerHTML=`
 
 <button onclick="comment()">💬</button>
 
-<button onclick="share()">📤</button>
-
 </div>
 
 <div class="user">
 
 <strong>@creator</strong>
-
-<div class="caption">${v.name}</div>
+<div>${v.name}</div>
 
 </div>
 
@@ -146,6 +130,12 @@ card.innerHTML=`
 feed.appendChild(card)
 
 })
+
+}catch(e){
+
+document.getElementById("feed").innerHTML="<h2 style='text-align:center;margin-top:100px;'>Video load error</h2>"
+
+}
 
 }
 
@@ -162,12 +152,6 @@ let c=prompt("Write comment")
 if(c){
 alert("Comment posted")
 }
-
-}
-
-function share(){
-
-alert("Share coming soon")
 
 }
 
