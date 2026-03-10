@@ -100,10 +100,8 @@ color:#ff6b6b;
 </form>
 
 <div class="signup">
-
 Don't have an account?
 <a href="signup.html">Signup</a>
-
 </div>
 
 <div class="message" id="message"></div>
@@ -112,38 +110,55 @@ Don't have an account?
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
+const API="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
 
 document.getElementById("loginForm").addEventListener("submit", async function(e){
 
 e.preventDefault()
 
-let email = document.getElementById("email").value
-let password = document.getElementById("password").value
+let email=document.getElementById("email").value
+let password=document.getElementById("password").value
 
-let response = await fetch(API_URL,{
+let formData=new FormData()
+
+formData.append("action","login")
+formData.append("email",email)
+formData.append("password",password)
+
+document.getElementById("message").innerText="Checking..."
+
+try{
+
+let response=await fetch(API,{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-action:"login",
-email:email,
-password:password
-})
+body:formData
 })
 
-let data = await response.json()
+let text=await response.text()
+
+let data
+
+try{
+data=JSON.parse(text)
+}catch{
+data={success:false}
+}
 
 if(data.success){
 
 localStorage.setItem("clipgoUser", email)
 
-window.location.href = "feed.html"
+window.location.href="feed.html"
 
 }else{
 
 document.getElementById("message").innerText="Invalid Email or Password"
+
+}
+
+}catch(err){
+
+document.getElementById("message").innerText="Server Error"
 
 }
 
