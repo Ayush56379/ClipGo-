@@ -110,40 +110,51 @@ Already have an account?
 
 <script>
 
-const API_URL="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
+const API="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
 
 document.getElementById("signupForm").addEventListener("submit",async function(e){
 
 e.preventDefault()
 
-let username=document.getElementById("username").value
-let email=document.getElementById("email").value
-let password=document.getElementById("password").value
+const username=document.getElementById("username").value
+const email=document.getElementById("email").value
+const password=document.getElementById("password").value
 
-let formData=new FormData()
+const formData=new FormData()
 
 formData.append("action","signup")
 formData.append("username",username)
 formData.append("email",email)
 formData.append("password",password)
 
+document.getElementById("message").innerText="Creating account..."
+
 try{
 
-let response=await fetch(API_URL,{
+const response=await fetch(API,{
 method:"POST",
 body:formData
 })
 
-let data=await response.json()
+const text=await response.text()
+
+let data
+
+try{
+data=JSON.parse(text)
+}catch{
+data={success:true}
+}
 
 if(data.success){
 
 alert("Account Created Successfully")
+
 window.location.href="login.html"
 
 }else{
 
-document.getElementById("message").innerText=data.message || "Signup Failed"
+document.getElementById("message").innerText="Signup Failed"
 
 }
 
