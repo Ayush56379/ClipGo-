@@ -12,10 +12,29 @@
 body{
 margin:0;
 background:black;
-color:white;
 font-family:Arial;
+color:white;
 overflow:hidden;
 }
+
+/* TOP BAR */
+
+.topbar{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:10px 20px;
+z-index:100;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+}
+
+/* FEED */
 
 .feed{
 height:100vh;
@@ -35,46 +54,36 @@ height:100%;
 object-fit:cover;
 }
 
+/* ACTION BUTTONS */
+
 .actions{
 position:absolute;
 right:15px;
-bottom:100px;
+bottom:120px;
 display:flex;
 flex-direction:column;
-gap:20px;
+gap:18px;
 }
 
 .actions button{
 background:none;
 border:none;
 color:white;
-font-size:22px;
+font-size:24px;
 cursor:pointer;
 }
+
+/* USER INFO */
 
 .user{
 position:absolute;
 left:15px;
-bottom:40px;
+bottom:60px;
 }
 
-.topbar{
-position:fixed;
-top:0;
-width:100%;
-display:flex;
-justify-content:space-between;
-padding:10px 20px;
-z-index:10;
-}
-
-.logout{
-background:#ff4444;
-border:none;
-color:white;
-padding:6px 12px;
-border-radius:6px;
-cursor:pointer;
+.caption{
+font-size:14px;
+color:#ddd;
 }
 
 </style>
@@ -85,97 +94,84 @@ cursor:pointer;
 
 <div class="topbar">
 
-<div>ClipGo</div>
-
-<button class="logout" onclick="logout()">Logout</button>
+<div class="logo">ClipGo</div>
 
 </div>
 
-<div class="feed" id="feed">
-
-<div class="video-card">
-
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted loop></video>
-
-<div class="actions">
-
-<button onclick="like()">❤️</button>
-<button onclick="comment()">💬</button>
-<button onclick="share()">📤</button>
-
-</div>
-
-<div class="user">@creator1</div>
-
-</div>
-
-
-<div class="video-card">
-
-<video src="https://www.w3schools.com/html/movie.mp4" autoplay muted loop></video>
-
-<div class="actions">
-
-<button onclick="like()">❤️</button>
-<button onclick="comment()">💬</button>
-<button onclick="share()">📤</button>
-
-</div>
-
-<div class="user">@creator2</div>
-
-</div>
-
-
-<div class="video-card">
-
-<video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay muted loop></video>
-
-<div class="actions">
-
-<button onclick="like()">❤️</button>
-<button onclick="comment()">💬</button>
-<button onclick="share()">📤</button>
-
-</div>
-
-<div class="user">@creator3</div>
-
-</div>
-
-</div>
+<div class="feed" id="feed"></div>
 
 <script>
 
+const API="https://script.google.com/macros/s/AKfycbxtBZHtXbXOUyNgp9Svb2uVnlF4sXzLXtRGCSYmEHXTrFQa1IQwFPSfWtfGJfsopnV7/exec"
+
+/* LOAD VIDEOS */
+
+async function loadVideos(){
+
+let res=await fetch(API+"?action=getVideos")
+
+let data=await res.json()
+
+let feed=document.getElementById("feed")
+
+data.videos.forEach(v=>{
+
+let card=document.createElement("div")
+card.className="video-card"
+
+card.innerHTML=`
+
+<video src="${v.url}" autoplay muted loop></video>
+
+<div class="actions">
+
+<button onclick="like()">❤️</button>
+
+<button onclick="comment()">💬</button>
+
+<button onclick="share()">📤</button>
+
+</div>
+
+<div class="user">
+
+<strong>@creator</strong>
+
+<div class="caption">${v.name}</div>
+
+</div>
+
+`
+
+feed.appendChild(card)
+
+})
+
+}
+
 function like(){
 
-alert("Video Liked")
+alert("Liked")
 
 }
 
 function comment(){
 
-let text=prompt("Write comment")
+let c=prompt("Write comment")
 
-if(text){
-alert("Comment Posted")
+if(c){
+alert("Comment posted")
 }
 
 }
 
 function share(){
 
-alert("Share feature coming soon")
+alert("Share coming soon")
 
 }
 
-function logout(){
-
-localStorage.removeItem("clipgoUser")
-
-window.location="login.html"
-
-}
+loadVideos()
 
 </script>
 
